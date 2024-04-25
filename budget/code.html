@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTZ8fHxlbnwwfHx8fHw%3D') no-repeat fixed;
+      background-size: cover;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+    }
+
+    .form {
+      margin-bottom: 20px;
+    }
+
+    .form input,
+    .form select,
+    .form button {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .transactions,
+    .balance {
+      margin-top: 20px;
+    }
+
+    .transactions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .transactions li {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .balance h2 {
+      margin-top: 0;
+    }
+
+    .balance p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Budget Tracker</h1>
+    <div class="form">
+      <input type="text" id="description" placeholder="Description" />
+      <input type="number" id="amount" placeholder="Amount" />
+      <select id="type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <button onclick="addTransaction()">Add</button>
+    </div>
+    <div class="transactions">
+      <h2>Transactions</h2>
+      <ul id="transaction-list"></ul>
+    </div>
+    <div class="balance">
+      <h2>Balance</h2>
+      <p id="balance-amount">0.00</p>
+    </div>
+  </div>
+
+  <script>
+    let balance = 0;
+
+    function addTransaction() {
+      const description = document.getElementById("description").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const type = document.getElementById("type").value;
+
+      if (description.trim() === "" || isNaN(amount)) {
+        alert("Please enter a valid description and amount.");
+        return;
+      }
+
+      const transaction = {
+        description,
+        amount,
+        type,
+      };
+
+      updateTransactionsList(transaction);
+      updateBalance(transaction);
+      clearInputFields();
+    }
+
+    function updateTransactionsList(transaction) {
+      const transactionList = document.getElementById("transaction-list");
+      const listItem = document.createElement("li");
+      listItem.innerHTML = `${transaction.description}: ${
+        transaction.type === "income" ? "+" : "-"
+      } $${Math.abs(transaction.amount).toFixed(2)}`;
+      transactionList.appendChild(listItem);
+    }
+
+    function updateBalance(transaction) {
+      if (transaction.type === "income") {
+        balance += transaction.amount;
+      } else {
+        balance -= transaction.amount;
+      }
+
+      const balanceAmount = document.getElementById("balance-amount");
+      balanceAmount.textContent = `$${balance.toFixed(2)}`;
+      balanceAmount.style.color = balance >= 0 ? "#007bff" : "#dc3545";
+    }
+
+    function clearInputFields() {
+      document.getElementById("description").value = "";
+      document.getElementById("amount").value = "";
+    }
+  </script>
+</body>
+</html>
